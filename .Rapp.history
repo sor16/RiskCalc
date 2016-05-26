@@ -1,0 +1,9 @@
+load("/Users/solviro/Dropbox/mergaexlireiknir/RiskUI/ShinyData.RData")
+View(Shinydata)
+View(ShinyData)
+ShinyData
+ShinyData.RData
+load("/Users/solviro/Dropbox/mergaexlireiknir/RiskUI/ShinyData.RData")
+ShinyData
+list.files()
+ls()
