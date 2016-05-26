@@ -53,7 +53,7 @@ server <- function(input,output){
     plotting <- eventReactive(input$Go,{
         Sex <- switch(input$Sex,"Female" = 1,"Male" = 2)
         Age <- as.numeric(input$Age) 
-        ShinyData <- ShinyData %>% filter(ageRange==floor(Age/10)*10 & kon==Sex)
+        ShinyData <- ShinyData %>% filter(ageRange==round(Age/10)*10 & kon==Sex & as.numeric(fudeath-diadat_case)<365.25*10) %>% filter()
         if(nrow(ShinyData)<20){
              return(NULL)
         }
@@ -66,6 +66,7 @@ server <- function(input,output){
         addrisk(gg_KM(plotting(),timeInYears=T,ticks="4x",colors=c("#52059f")))
     })
     output$print <- renderPrint({
+        input$disease
     })
     output$table <- renderTable({
         
