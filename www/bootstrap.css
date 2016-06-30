@@ -67,3 +67,28 @@
     background-color: #871cd0;
   }
 }
+
+.js-irs-0 .irs-bar {
+border-top-color: #52059f;
+border-bottom-color: #52059f;
+} 
+
+.js-irs-0 .irs-bar-edge {
+border-color: #52059f;
+}
+
+.js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {
+background: #52059f;
+}
+.js-irs-1 .irs-bar {
+border-top-color: #52059f;
+border-bottom-color: #52059f;
+} 
+
+.js-irs-1 .irs-bar-edge {
+border-color: #52059f;
+}
+
+.js-irs-1 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {
+background: #52059f;
+}

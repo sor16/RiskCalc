@@ -4,15 +4,20 @@ library(ggplot2)
 library(dplyr)
 library(ggKaplanMeier)
 library(survival)
+library(magrittr)
 setwd("~/Dropbox/MergaexliReiknir/RiskUI")
 load("ShinyData.RData")
 color <- "#52059f"
 ui <- tagList(
     includeCSS("www/bootstrap.css"),
-    navbarPage(title="Áhættureiknir", theme="bootstrap.css",
+    navbarPage(title="Áhættureiknir",
     tabPanel("Myndir", icon = icon("stats", lib = "glyphicon"),
-             sidebarPanel(width=4,
-            selectInput(inputId="Age",label="Select your age",choices=as.character(1:110),selected=60),
+            column(width=4,
+            #selectInput(inputId="Age",label="Select your age",choices=as.character(1:110),selected=60),
+            textInput(inputId="Age",label="Select your age"),
+            conditionalPanel(
+            condition = "input.Age != ''",
+            uiOutput("AgeRange")),
             selectInput(inputId="Sex",label="Select your sex",choices=c("Female","Male")),
             checkboxGroupInput(inputId="disease",label="",choices=c("Kransæðasjúkdómur"="Kransæðasjúkdómur",
                                                                 "Sykursýki."="Sykursýki.",
@@ -51,13 +56,21 @@ ui <- tagList(
 server <- function(input,output){
     plots <- reactiveValues(i=1,max=10,List=list())
     plotting <- eventReactive(input$Go,{
-        Sex <- switch(input$Sex,"Female" = 1,"Male" = 2)
-        Age <- as.numeric(input$Age) 
-        ShinyData <- ShinyData %>% filter(ageRange==round(Age/10)*10 & kon==Sex & as.numeric(fudeath-diadat_case)<365.25*10) %>% filter()
-        if(nrow(ShinyData)<20){
-             return(NULL)
+        req(input$Age)
+        Sys.setlocale(category="LC_ALL",locale="is_IS")
+        Sex <- switch(input$Sex,"Female" = 2,"Male" = 1)
+        Age <- with(ShinyData,as.numeric(input$Age))
+        if(is.null(input$disease)){
+            namesOfDisease=rep(TRUE,nrow(ShinyData))
+        }else{
+            namesOfDisease=with(ShinyData,eval(parse(text=paste(input$disease,collapse=" & "))))
         }
-        survObject <- with(ShinyData,Surv(time=rep(0,nrow(ShinyData)),time2=as.numeric(fudeath-diadat_case),event=dead))
+        ShinyData <- ShinyData %>% filter(age < (input$AgeRange[2]) & age > (input$AgeRange[1]) & kon==Sex & namesOfDisease)
+        if(nrow(ShinyData)<20){
+             stop(paste("Not able to plot survival, only", nrow(ShinyData),"match these conditions."))
+        }
+        futime <- with(ShinyData,as.numeric(fudeath-diadat_case))
+        survObject <- with(ShinyData,Surv(time=rep(0,nrow(ShinyData)),time2=futime,event=dead))
         fit=survfit(survObject~1,data=ShinyData)
         return(fit)
     })
@@ -66,10 +79,16 @@ server <- function(input,output){
         addrisk(gg_KM(plotting(),timeInYears=T,ticks="4x",colors=c("#52059f")))
     })
     output$print <- renderPrint({
-        input$disease
+        input$AgeRange[1]
     })
     output$table <- renderTable({
         
+    })
+    output$AgeRange <- renderUI({
+        Age <- as.numeric(input$Age)
+        ageRange <- c(Age-5, Age+5)
+        sliderInput(inputId="AgeRange", label = "Age Range", min = 0, 
+                    max = 100, value = ageRange)
     })
     # observeEvent(input$forward,{
     #     plots$i=ifelse(plots$i==10,plots$i%%plots$max+1,plots$i+1)
