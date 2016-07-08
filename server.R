@@ -24,9 +24,10 @@ shinyServer(function(input,output,session){
         return(data.frame(time=baseline$time/365.25,survival=survival,lower=lowerSurvival,upper=upperSurvival,nullModel=nullModel,upperNull=upperNull,lowerNull=lowerNull))
     })
     output$plot <- renderPlot({
-        g <- ggplot(data=calculate(),aes(time,survival)) + geom_line() + geom_line(aes(time,lower),linetype=2) +
-            geom_line(aes(time,upper),linetype=2) + geom_line(aes(time,nullModel,col=factor("baselineSurvival"))) +
-            geom_line(aes(time,lowerNull),linetype=2) +geom_line(aes(time,upperNull),linetype=2)+theme_bw() 
+        maleNoComorb <- factor("baselineSurvival")
+        ggplot(data=calculate(),aes(time,survival)) + geom_line() + geom_line(aes(time,lower),linetype=2) +
+            geom_line(aes(time,upper),linetype=2) + geom_line(aes(time,nullModel,col=maleNoComorb)) +
+            geom_line(aes(time,lowerNull,col=maleNoComorb),linetype=2) +geom_line(aes(time,upperNull,col=maleNoComorb),linetype=2)+theme_bw() 
     })
     output$print <- renderPrint({
         NULL
