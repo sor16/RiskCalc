@@ -4,6 +4,7 @@ shinyServer(function(input,output,session){
     plots <- reactiveValues(i=1,max=10,List=list())
     calculate <- eventReactive(input$Go,{
         req(input$Age)
+        baseline <- baseline[baseline$time < 10*365,]
         Sys.setlocale(category="LC_ALL",locale="is_IS")
         Sex <- input$Sex == "Female"
         Age <- as.numeric(input$Age)
