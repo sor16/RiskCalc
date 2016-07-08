@@ -2,7 +2,7 @@ library(shiny)
 load("ShinyData.RData")
 list2env(ShinyData,envir = globalenv())
 color <- "#52059f"
-ShinyUI(tagList(
+shinyUI(tagList(
     includeCSS("www/bootstrapNew.css"),
     navbarPage(title="MARC",
                tabPanel("Calculator", icon = icon("stats", lib = "glyphicon"),
