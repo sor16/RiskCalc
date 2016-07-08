@@ -8,29 +8,30 @@ shinyServer(function(input,output,session){
         Sex <- input$Sex == "Female"
         Age <- as.numeric(input$Age)
         if(Age<0) return(NULL)
-        covariateVector <- sapply(1:length(variables),function(i){
+        comorbVector <- sapply(1:length(variables),function(i){
             input[[variables[i]]]  
         })
-        covariateVector <- c(1994,Sex,Age,covariateVector) - Means
+        covariateVector <- c(2013,Sex,Age,comorbVector) - Means
         #covariateVector <- c(2013,Sex,Age,variables %in% input$Comorbidities) - Means
         survival <- baseline$surv^(exp(sum(covariateVector*coefficients)))
         lowerSurvival <- baseline$lower^(exp(sum(covariateVector*lower)))
         upperSurvival <- baseline$upper^(exp(sum(covariateVector*upper)))
         
         binaryMeans <- replace(Means,Means>1,0)
-        nullModel <- baseline$surv^(exp(sum(-binaryMeans*coefficients)))
-        lowerNull <- baseline$lower^(exp(sum(-binaryMeans*lower)))
-        upperNull <- baseline$upper^(exp(sum(-binaryMeans*upper)))
+        nullCovariates <- c(2013,Sex,Age,rep(0,length(comorbVector))) - Means
+        nullModel <- baseline$surv^(exp(sum(nullCovariates*coefficients)))
+        lowerNull <- baseline$lower^(exp(sum(nullCovariates*lower)))
+        upperNull <- baseline$upper^(exp(sum(nullCovariates*upper)))
         return(data.frame(time=baseline$time/365.25,survival=survival,lower=lowerSurvival,upper=upperSurvival,nullModel=nullModel,upperNull=upperNull,lowerNull=lowerNull))
     })
     output$plot <- renderPlot({
-        maleNoComorb <- factor("baselineSurvival")
+        NoComorbidities <- factor("NoComorbidities")
         ggplot(data=calculate(),aes(time,survival)) + geom_line() + geom_line(aes(time,lower),linetype=2) +
-            geom_line(aes(time,upper),linetype=2) + geom_line(aes(time,nullModel,col=maleNoComorb)) +
-            geom_line(aes(time,lowerNull,col=maleNoComorb),linetype=2) +geom_line(aes(time,upperNull,col=maleNoComorb),linetype=2)+theme_bw() 
+            geom_line(aes(time,upper),linetype=2) + geom_line(aes(time,nullModel,col=NoComorbidities)) +
+            geom_line(aes(time,lowerNull,col=NoComorbidities),linetype=2) +geom_line(aes(time,upperNull,col=NoComorbidities),linetype=2)+theme_bw() 
     })
     output$print <- renderPrint({
-        NULL
+        Means
     })
     observeEvent(input$Diabetes.Mellitus,{
         if(input$Diabetes.end.organ.diagroup)
