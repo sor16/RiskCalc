@@ -1,6 +1,6 @@
 library(shiny)
 library(ggplot2)
-function(input,output,session){
+ShinyServer(function(input,output,session){
     plots <- reactiveValues(i=1,max=10,List=list())
     calculate <- eventReactive(input$Go,{
         req(input$Age)
@@ -55,4 +55,4 @@ function(input,output,session){
     })
     
     
-}
+})
