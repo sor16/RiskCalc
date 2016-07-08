@@ -1,5 +1,5 @@
 library(ggplot2)
-server <- function(input,output,session){
+function(input,output,session){
     plots <- reactiveValues(i=1,max=10,List=list())
     calculate <- eventReactive(input$Go,{
         req(input$Age)
