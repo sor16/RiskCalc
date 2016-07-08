@@ -28,13 +28,7 @@ function(input,output,session){
             geom_line(aes(time,lowerNull),linetype=2) +geom_line(aes(time,upperNull),linetype=2)+theme_bw() 
     })
     output$print <- renderPrint({
-        Sex <- input$Sex == "Female"
-        Age <- as.numeric(input$Age)
-        if(Age<0) return(NULL)
-        covariateVector <- sapply(1:length(variables),function(i){
-            input[[variables[i]]]  
-        })
-        c(1994,Sex,Age,covariateVector)# - Means
+        NULL
     })
     observeEvent(input$Diabetes.Mellitus,{
         if(input$Diabetes.end.organ.diagroup)
