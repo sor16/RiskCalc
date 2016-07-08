@@ -7,3 +7,11 @@ load("/Users/solviro/Dropbox/mergaexlireiknir/RiskUI/ShinyData.RData")
 ShinyData
 list.files()
 ls()
+load("/Users/solviro/Dropbox/mergaexliReiknir/RiskUI/CoxModel.RData")
+CoxModel
+load("/Users/solviro/Dropbox/mergaexliReiknir/RiskUI/baseline.RData")
+load("/Users/solviro/Dropbox/mergaexliReiknir/RiskUI/coefficients.RData")
+load("/Users/solviro/Dropbox/mergaexliReiknir/RiskUI/lower.RData")
+load("/Users/solviro/Dropbox/mergaexliReiknir/RiskUI/Means.RData")
+load("/Users/solviro/Dropbox/mergaexliReiknir/RiskUI/upper.RData")
+load("/Users/solviro/Dropbox/mergaexliReiknir/RiskUI/variables.RData")
