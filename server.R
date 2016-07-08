@@ -32,7 +32,7 @@ shinyServer(function(input,output,session){
             geom_line(aes(time,lowerNull,col=NoComorbidities),linetype=2) +geom_line(aes(time,upperNull,col=NoComorbidities),linetype=2)+theme_bw() 
     })
     output$print <- renderPrint({
-        Means
+
     })
     observeEvent(input$Diabetes.Mellitus,{
         if(input$Diabetes.end.organ.diagroup)
