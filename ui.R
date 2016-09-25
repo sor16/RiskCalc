@@ -15,7 +15,7 @@ shinyUI(tagList(
                                actionButton(inputId="Go","Submit")
                         ),
                         column(width=9,
-                               uiOutput("info"),
+                               uiOutput("Info"),
                                plotOutput("plot"),
                                textOutput("print")
                         )
